@@ -27,17 +27,17 @@ class myClient(discord.Client):
                 embed.description = embeds[page]
                 embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
                 await pl.edit(embed=embed)
-            if payload.emoji.name == '◀️' and page > 0:
+            elif payload.emoji.name == '◀️' and page > 0:
                 page -= 1
                 embed.description = embeds[page]
                 embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
                 await pl.edit(embed=embed)
-            if payload.emoji.name == '▶️' and page < len(embeds) -1:
+            elif payload.emoji.name == '▶️' and page < len(embeds) -1:
                 page += 1
                 embed.description = embeds[page]
                 embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
                 await pl.edit(embed=embed)
-            if payload.emoji.name == '⏩' and page < len(embeds) -1:
+            elif payload.emoji.name == '⏩' and page < len(embeds) -1:
                 page = len(embeds)-1
                 embed.description = embeds[page]
                 embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
@@ -52,17 +52,17 @@ class myClient(discord.Client):
                 embed.description = embeds[page]
                 embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
                 await pl.edit(embed=embed)
-            if payload.emoji.name == '◀️' and page > 0:
+            elif payload.emoji.name == '◀️' and page > 0:
                 page -= 1
                 embed.description = embeds[page]
                 embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
                 await pl.edit(embed=embed)
-            if payload.emoji.name == '▶️' and page < len(embeds) -1:
+            elif payload.emoji.name == '▶️' and page < len(embeds) -1:
                 page += 1
                 embed.description = embeds[page]
                 embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
                 await pl.edit(embed=embed)
-            if payload.emoji.name == '⏩' and page < len(embeds) -1:
+            elif payload.emoji.name == '⏩' and page < len(embeds) -1:
                 page = len(embeds)-1
                 embed.description = embeds[page]
                 embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
@@ -194,6 +194,7 @@ class myClient(discord.Client):
                     dbconn.commit()
                     cursor.close()
                     dbconn.close()
+                    await ctx.add_reaction('👌️')
 
                 # delete PL
                 elif m.lower().startswith("drop"):
@@ -205,6 +206,7 @@ class myClient(discord.Client):
                     dbconn.commit()
                     cursor.close()
                     dbconn.close()
+                    await ctx.add_reaction('👌️')
 
 # This class is used to interact with the Discord WebSocket and API.
 client = myClient()

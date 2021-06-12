@@ -135,8 +135,6 @@ class myClient(discord.Client):
                             page += 1
                             i += 1
                         l += '```'
-                        if l:
-                            embeds.append(l+'```')
 
                     # Show particular pl
                     else:
@@ -156,8 +154,8 @@ class myClient(discord.Client):
                             l += f"{str(id)}) [{title}]({link})  - [<@!{user}>]\n"
                             page += 1
                             id += 1
-                        if l:
-                            embeds.append(l)
+                    if l:
+                        embeds.append(l)
                     cursor.close()
                     dbconn.close()
                     page = 0

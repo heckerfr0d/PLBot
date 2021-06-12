@@ -81,6 +81,11 @@ class myClient(discord.Client):
             msg = (await ctx.channel.history(limit=1).flatten())[0]
             if msg.content.lower().startswith("pl "):
                 m = msg.content[3:]
+
+                # ping
+                if m.lower().startswith('ping'):
+                    await ctx.channel.send(f'pong in {round(client.latency * 1000)}ms :)')
+
                 # start listening
                 if m.lower().startswith('startl'):
                     music = ctx.channel
@@ -121,7 +126,7 @@ class myClient(discord.Client):
                     dbconn = psycopg2.connect("dbname=DPL")
                     cursor = dbconn.cursor()
                     if len(m) <= 5:
-                        m = "Playlists:"
+                        m = "Playlists"
                         l = '```nim\n'
                         cursor.execute("SELECT Name from playlists")
                         i = page = 0

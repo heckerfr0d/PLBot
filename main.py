@@ -17,96 +17,8 @@ class myClient(discord.Client):
   # Coroutine to login
     async def on_ready(self):
         print(f'Logged in as {client.user}'.format(client))
-        # dbconn = psycopg2.connect("dbname=DPL")
-        # cursor = dbconn.cursor()
-        # m = "Kammattipadam"
-        # # cursor.execute(f"DELETE FROM playlists WHERE name='{m}'")
-        # # cursor.execute(f"INSERT INTO playlists (name) VALUES ('{m}')")
-        # # cursor.execute(f"DROP TABLE IF EXISTS {m}")
-        # # cursor.execute(f"CREATE TABLE {m} (id serial primary key, title text not NULL, url text, uid text)")
-        # # kp = {"651060433972756492" : "Annen", "757506147606593547" : "Cellu", "578439959678025729" : "Heri", "724357207533027358" : "Jawad", "611501944649023498" : "Hedif", "755712019549782080" : "JFK", "757502893786923088" : "Meden", "758333159674085386" : "Shehz", "757502277434212362" : "Shen"}
-        # # for v in kp.values():
-        # #     cursor.execute(f"DELETE FROM playlists WHERE name='{v}'")
-        # #     cursor.execute(f"INSERT INTO playlists (name) VALUES ('{v}')")
-        # #     cursor.execute(f"DROP TABLE IF EXISTS {v}")
-        # #     cursor.execute(f"CREATE TABLE {v} (id serial primary key, title text not NULL, url text, uid text)")
-        # before = datetime(2021, 4, 3)
-        # groovy = await client.fetch_user(234395307759108106)
-        # chatH = []
-        # yesterday = datetime(2019, 1, 1).strftime("%d_%m_%Y")
-        # async for msg in client.get_channel(756746075758657572).history(limit=None, before=before, oldest_first=True):
-        #     if msg.author==groovy and msg.embeds and msg.embeds[0].description:
-        #         chatH.append(msg)
-        # botsH = []
-        # async for msg in client.get_channel(760829747168673804).history(limit=None, before=before, oldest_first=True):
-        #     if msg.author==groovy and msg.embeds and msg.embeds[0].description:
-        #         botsH.append(msg)
-        # while chatH and botsH:
-        #     if chatH[0].created_at < botsH[0].created_at:
-        #         msg = chatH.pop(0)
-        #     else:
-        #         msg = botsH.pop(0)
-        #     if msg.embeds and msg.embeds[0].description:
-        #         if msg.embeds[0].description.startswith("Queued"):
-        #             q = re.findall("\[(.*)\]\((.*)\).*(\d{18})", msg.embeds[0].description)
-        #             if q:
-        #                 today = msg.created_at.strftime("%d_%m_%Y")
-        #                 if today != yesterday:
-        #                     cursor.execute(f"INSERT INTO playlists (name) VALUES ('{m}_{today}')")
-        #                     cursor.execute(f"CREATE TABLE {m}_{today} (id serial primary key, title text not NULL, url text, uid text)")
-        #                     print(yesterday, "done :)")
-        #                     yesterday = today
-        #                 title, url, uid = q[0]
-        #                 title = title.replace("'", "")
-        #                 cursor.execute(f"INSERT INTO {m}_{today} (title, url, uid) VALUES ('{title}', '{url}', '{uid}')")
-        # print("main done")
-        # for msg in chatH:
-        #     if msg.embeds and msg.embeds[0].description:
-        #         if msg.embeds[0].description.startswith("Queued"):
-        #             q = re.findall("\[(.*)\]\((.*)\).*(\d{18})", msg.embeds[0].description)
-        #             if q:
-        #                 today = msg.created_at.strftime("%d_%m_%Y")
-        #                 if today != yesterday:
-        #                     cursor.execute(f"INSERT INTO playlists (name) VALUES ('{m}_{today}')")
-        #                     cursor.execute(f"CREATE TABLE {m}_{today} (id serial primary key, title text not NULL, url text, uid text)")
-        #                     print(yesterday, "done :)")
-        #                     yesterday = today
-        #                 title, url, uid = q[0]
-        #                 title = title.replace("'", "")
-        #                 cursor.execute(f"INSERT INTO {m}_{today} (title, url, uid) VALUES ('{title}', '{url}', '{uid}')")
-        #         # elif msg.embeds[0].description.startswith("Removed"):
-        #         #     q = re.findall("\[(.*)\]\((.*)\).*(\d{18})", msg.embeds[0].description)
-        #         #     if q:
-        #         #         title, url, uid = q[0]
-        #         #         cursor.execute(f"DELETE FROM {m} WHERE url='{url}'")
-        # print("chatH done")
-        # for msg in botsH:
-        #     if msg.embeds and msg.embeds[0].description:
-        #         if msg.embeds[0].description.startswith("Queued"):
-        #             q = re.findall("\[(.*)\]\((.*)\).*(\d{18})", msg.embeds[0].description)
-        #             if q:
-        #                 today = msg.created_at.strftime("%d_%m_%Y")
-        #                 if today != yesterday:
-        #                     cursor.execute(f"INSERT INTO playlists (name) VALUES ('{m}_{today}')")
-        #                     cursor.execute(f"CREATE TABLE {m}_{today} (id serial primary key, title text not NULL, url text, uid text)")
-        #                     print(yesterday, "done :)")
-        #                     yesterday = today
-        #                 title, url, uid = q[0]
-        #                 title = title.replace("'", "")
-        #                 cursor.execute(f"INSERT INTO {m}_{today} (title, url, uid) VALUES ('{title}', '{url}', '{uid}')")
-        #         # elif msg.embeds[0].description.startswith("Removed"):
-        #         #     q = re.findall("\[(.*)\]\((.*)\).*(\d{18})", msg.embeds[0].description)
-        #         #     if q:
-        #         #         title, url, uid = q[0]
-        #         #         cursor.execute(f"DELETE FROM {m} WHERE url='{url}'")
-        # print("botsh done")
 
-        # dbconn.commit()
-        # print(f"{m} done :)")
-        # cursor.close()
-        # dbconn.close()
-
-
+    # pagination
     async def on_raw_reaction_add(self, payload):
         global pl, page, embed, embeds
         if embeds and pl and payload.message_id==pl.id and payload.user_id!=client.user.id:
@@ -131,6 +43,7 @@ class myClient(discord.Client):
                 embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
                 await pl.edit(embed=embed)
 
+    # pagination
     async def on_raw_reaction_remove(self, payload):
         global pl, page, embed, embeds
         if embeds and pl and payload.message_id==pl.id:
@@ -192,7 +105,9 @@ class myClient(discord.Client):
                                 cursor.execute(f"INSERT INTO {m} (title, url, uid) VALUES ('{song}', '{link}', '{id}')")
                         elif msg.embeds[0].description.startswith("Removed"):
                             song, link = re.findall("\[(.*)\]\((.*)\)", msg.embeds[0].description)[0]
-                            cursor.execute(f"DELETE FROM {m} WHERE url='{link}'")
+                            cursor.execute(f"SELECT id FROM {m} WHERE url='{link}' ORDER BY id DESC")
+                            id = cursor.fetchone()[0]
+                            cursor.execute(f"DELETE FROM {m} WHERE id={id}")
                 after = None
                 music = None
                 dbconn.commit()
@@ -205,15 +120,16 @@ class myClient(discord.Client):
                 dbconn = psycopg2.connect("dbname=DPL")
                 cursor = dbconn.cursor()
                 cursor.execute("SELECT Name from playlists")
-                page = 0
+                i = page = 0
                 embeds = []
                 for name in cursor.fetchall():
                     if page==10:
                         embeds.append(l+'```')
                         page = 0
                         l = '```nim\n'
-                    l += f"{str(page+1)}) {name[0]}\n"
+                    l += f"{str(i+1)}) {name[0]}\n"
                     page += 1
+                    i += 1
                 l += '```'
                 cursor.close()
                 dbconn.close()
@@ -227,17 +143,17 @@ class myClient(discord.Client):
                 await pl.add_reaction('◀️')
                 await pl.add_reaction('▶️')
                 await pl.add_reaction('⏩')
-                try:
-                    msg = await client.wait_for('message', timeout= 60.0)
-                    pl = None
-                    embed = None
-                    embeds = None
-                    page = None
-                except:
-                    pl = None
-                    embed = None
-                    embeds = None
-                    page = None
+                # try:
+                #     msg = await client.wait_for('message', timeout= 60.0)
+                #     pl = None
+                #     embed = None
+                #     embeds = None
+                #     page = None
+                # except:
+                #     pl = None
+                #     embed = None
+                #     embeds = None
+                #     page = None
 
             # Show particular pl
             elif m.lower().startswith('showpl'):
@@ -292,6 +208,7 @@ class myClient(discord.Client):
                 cursor = dbconn.cursor()
                 cursor.execute(f"SELECT url FROM {m}")
                 music = ctx.channel
+                after = datetime.now()
                 await ctx.channel.send('Queuing playlist '+ m)
                 for s in cursor.fetchall():
                     await ctx.channel.send(f'{botl[pf]}p {s[0]}', delete_after=0.5)
@@ -299,6 +216,27 @@ class myClient(discord.Client):
                 cursor.close()
                 dbconn.close()
 
+            # rename PL
+            elif m.lower().startswith("renamepl"):
+                old, new = m.split()[1:]
+                dbconn = psycopg2.connect("dbname=DPL")
+                cursor = dbconn.cursor()
+                cursor.execute(f"ALTER TABLE {old} RENAME TO {new}")
+                cursor.execute(f"UPDATE playlists SET name='{new}' WHERE name='{old}'")
+                dbconn.commit()
+                cursor.close()
+                dbconn.close()
+
+            # delete PL
+            elif m.lower().startswith("droppl"):
+                tata = m[7:]
+                dbconn = psycopg2.connect("dbname=DPL")
+                cursor = dbconn.cursor()
+                cursor.execute(f"DROP TABLE {tata}")
+                cursor.execute(f"DELETE FROM playlists WHERE name='{tata}'")
+                dbconn.commit()
+                cursor.close()
+                dbconn.close()
 
 # This class is used to interact with the Discord WebSocket and API.
 client = myClient()

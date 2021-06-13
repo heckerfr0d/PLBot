@@ -174,20 +174,24 @@ class myClient(discord.Client):
 
                 # play PL
                 elif m.lower().startswith(tuple(botl.keys())):
-                    m = m.split()
-                    pf = m[0]
-                    m = ' '.join(m[1:])
-                    dbconn = psycopg2.connect("dbname=DPL")
-                    cursor = dbconn.cursor()
-                    cursor.execute(f"SELECT url FROM {m}")
-                    music = ctx.channel
-                    after = datetime.now()
-                    await ctx.channel.send('Queuing playlist '+ m)
-                    for s in cursor.fetchall():
-                        await ctx.channel.send(f'{botl[pf]}p {s[0]}', delete_after=0.5)
-                    await ctx.channel.send(f'{botl[pf]}q', delete_after=1)
-                    cursor.close()
-                    dbconn.close()
+                    if not ctx.author.voice:
+                        await ctx.channel.send("Bruh join a voice channel lol")
+                    else:
+                        m = m.split()
+                        pf = m[0]
+                        m = ' '.join(m[1:])
+                        dbconn = psycopg2.connect("dbname=DPL")
+                        cursor = dbconn.cursor()
+                        cursor.execute(f"SELECT url FROM {m}")
+                        music = ctx.channel
+                        after = datetime.now()
+                        await ctx.channel.send('Queuing playlist '+ m)
+                        await ctx.author.voice.channel.connect()
+                        for s in cursor.fetchall():
+                            await ctx.channel.send(f'{botl[pf]}p {s[0]}', delete_after=0.5)
+                        await ctx.channel.send(f'{botl[pf]}q', delete_after=0.5)
+                        cursor.close()
+                        dbconn.close()
 
                 # rename PL
                 elif m.lower().startswith("rename"):

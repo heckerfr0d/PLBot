@@ -188,8 +188,8 @@ class myClient(discord.Client):
                         await ctx.channel.send('Queuing playlist '+ m)
                         vc = await ctx.author.voice.channel.connect()
                         for s in cursor.fetchall():
-                            await ctx.channel.send(f'{botl[pf]}p {s[0]}', delete_after=0.5)
-                        await ctx.channel.send(f'{botl[pf]}q', delete_after=0.5)
+                            await ctx.channel.send(f'{botl[pf]}p {s[0]}', delete_after=1)
+                        await ctx.channel.send(f'{botl[pf]}q', delete_after=1)
                         await vc.disconnect()
                         cursor.close()
                         dbconn.close()

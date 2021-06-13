@@ -5,7 +5,6 @@ import re
 from datetime import datetime
 import psycopg2
 
-music = None
 after = None
 pl = None
 page = None
@@ -20,7 +19,7 @@ class myClient(discord.Client):
 
     # pagination
     async def on_raw_reaction_add(self, payload):
-        global pl, page, embed, embeds
+        global pl, page, embed, embeds, d
         if embeds and pl and payload.message_id==pl.id and payload.user_id!=client.user.id:
             if payload.emoji.name == '⏪' and page > 0:
                 page = 0
@@ -71,7 +70,7 @@ class myClient(discord.Client):
 
   # Coroutine to answer messages
     async def on_message(self, ctx):
-        global music, after, pl, page, embeds, embed
+        global after, pl, page, embeds, embed
         botl = {'groovy': '-', 'rythm': '!', 'rythm2': '>'}
 
         # auth :p
@@ -79,7 +78,7 @@ class myClient(discord.Client):
             return
         else:
             msg = (await ctx.channel.history(limit=1).flatten())[0]
-            if msg.content.lower().startswith("pl "):
+            if msg.content.lower().startswith('pl '):
                 m = msg.content[3:]
 
                 # ping
@@ -88,7 +87,6 @@ class myClient(discord.Client):
 
                 # start listening
                 if m.lower().startswith('startl'):
-                    music = ctx.channel
                     await ctx.add_reaction('😌️')
                     after = datetime.now()
 
@@ -99,11 +97,11 @@ class myClient(discord.Client):
                     await ctx.channel.send(f'Saving this queue as playlist `{m}`')
                     dbconn = psycopg2.connect("dbname=DPL")
                     cursor = dbconn.cursor()
-                    cursor.execute(f"DELETE FROM playlists WHERE Name='{m}'")
-                    cursor.execute(f"INSERT INTO playlists (Name) VALUES ('{m}')")
-                    cursor.execute(f"DROP TABLE IF EXISTS {m}")
-                    cursor.execute(f"CREATE TABLE {m} (id serial primary key, title text not NULL, url text, uid text)")
-                    async for msg in music.history(after=after):
+                    cursor.execute(f"SELECT * FROM playlists WHERE Name='{m}'")
+                    if not cursor.fetchall():
+                        cursor.execute(f"INSERT INTO playlists (Name) VALUES ('{m}')")
+                        cursor.execute(f"CREATE TABLE {m} (id serial primary key, title text not NULL, url text, uid text)")
+                    async for msg in ctx.channel.history(after=after):
                         if msg.embeds and msg.embeds[0].description:
                             if msg.embeds[0].description.startswith("Queued"):
                                 q = re.findall("\[(.*)\]\((.*)\).*(\d{18})", msg.embeds[0].description)
@@ -116,7 +114,6 @@ class myClient(discord.Client):
                                 id = cursor.fetchone()[0]
                                 cursor.execute(f"DELETE FROM {m} WHERE id={id}")
                     after = None
-                    music = None
                     dbconn.commit()
                     cursor.close()
                     dbconn.close()
@@ -129,16 +126,15 @@ class myClient(discord.Client):
                         m = "Playlists"
                         l = '```nim\n'
                         cursor.execute("SELECT Name from playlists")
-                        i = page = 0
+                        page = 0
                         embeds = []
                         for name in cursor.fetchall():
                             if page==10:
                                 embeds.append(l+'```')
                                 page = 0
                                 l = '```nim\n'
-                            l += f"{str(i+1)}) {name[0]}\n"
+                            l += f"{str(len(embeds)*10 + page + 1)}) {name[0]}\n"
                             page += 1
-                            i += 1
                         l += '```'
 
                     # Show particular pl
@@ -150,15 +146,13 @@ class myClient(discord.Client):
                         embeds = []
                         page = 0
                         l = ''
-                        id = 1
                         for title, link, user in cursor.fetchall():
                             if page==10:
                                 embeds.append(l)
                                 l = ''
                                 page = 0
-                            l += f"{str(id)}) [{title}]({link})  - [<@!{user}>]\n"
+                            l += f"{str(len(embeds)*10 + page + 1)}) [{title}]({link})  - [<@!{user}>]\n"
                             page += 1
-                            id += 1
                     if l:
                         embeds.append(l)
                     cursor.close()
@@ -183,8 +177,6 @@ class myClient(discord.Client):
                         dbconn = psycopg2.connect("dbname=DPL")
                         cursor = dbconn.cursor()
                         cursor.execute(f"SELECT url FROM {m}")
-                        music = ctx.channel
-                        after = datetime.now()
                         await ctx.channel.send('Queuing playlist '+ m)
                         vc = await ctx.author.voice.channel.connect()
                         for s in cursor.fetchall():
@@ -195,7 +187,7 @@ class myClient(discord.Client):
                         dbconn.close()
 
                 # rename PL
-                elif m.lower().startswith("rename"):
+                elif m.lower().startswith('rename'):
                     old, new = m.split()[1:]
                     dbconn = psycopg2.connect("dbname=DPL")
                     cursor = dbconn.cursor()
@@ -207,7 +199,7 @@ class myClient(discord.Client):
                     await ctx.add_reaction('👌️')
 
                 # delete PL
-                elif m.lower().startswith("drop"):
+                elif m.lower().startswith('drop'):
                     tata = m[5:]
                     dbconn = psycopg2.connect("dbname=DPL")
                     cursor = dbconn.cursor()
@@ -217,6 +209,43 @@ class myClient(discord.Client):
                     cursor.close()
                     dbconn.close()
                     await ctx.add_reaction('👌️')
+
+                # trim PL
+                elif m.lower().startswith('trim'):
+                    m = m[5:].split()
+                    a = map(int, m[1:])
+                    m= m[0]
+                    dbconn = psycopg2.connect("dbname=DPL")
+                    cursor = dbconn.cursor()
+                    cursor.execute(f"SELECT id, title, url, uid from {m}")
+                    embeds = []
+                    page = 0
+                    l = ''
+                    id = 1
+                    rows = cursor.fetchall()
+                    for _, title, link, user in rows:
+                        if page==10:
+                            embeds.append(l)
+                            l = ''
+                            page = 0
+                        if id in a:
+                            cursor.execute(f"DELETE FROM {m} WHERE id={_}")
+                        else:
+                            l += f"{str(len(embeds)*10 + page + 1)}) [{title}]({link})  - [<@!{user}>]\n"
+                            page += 1
+                        id += 1
+                    if l:
+                        embeds.append(l)
+                    cursor.close()
+                    dbconn.close()
+                    page = 0
+                    embed = discord.Embed(title=f'{m} (Updated):', color=ctx.author.color, description=embeds[page])
+                    embed.set_footer(text=f'Page {page+1} of {len(embeds)}')
+                    pl = await ctx.channel.send(embed=embed)
+                    await pl.add_reaction('⏪')
+                    await pl.add_reaction('◀️')
+                    await pl.add_reaction('▶️')
+                    await pl.add_reaction('⏩')
 
 # This class is used to interact with the Discord WebSocket and API.
 client = myClient()

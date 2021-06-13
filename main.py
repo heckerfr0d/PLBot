@@ -186,10 +186,11 @@ class myClient(discord.Client):
                         music = ctx.channel
                         after = datetime.now()
                         await ctx.channel.send('Queuing playlist '+ m)
-                        await ctx.author.voice.channel.connect()
+                        vc = await ctx.author.voice.channel.connect()
                         for s in cursor.fetchall():
                             await ctx.channel.send(f'{botl[pf]}p {s[0]}', delete_after=0.5)
                         await ctx.channel.send(f'{botl[pf]}q', delete_after=0.5)
+                        await vc.disconnect()
                         cursor.close()
                         dbconn.close()
 

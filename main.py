@@ -85,6 +85,18 @@ class myClient(discord.Client):
                 if m.lower().startswith('ping'):
                     await ctx.channel.send(f'pong in {round(client.latency * 1000)}ms :)')
 
+                # help
+                if m.lower().startswith('help'):
+                    embed = discord.Embed(title='PLBot', color=ctx.author.color, description='A bot to manage groovy playlists!\nPrefix for this bot is `pl `.')
+                    embed.add_field(name='pl startl', value='Start listening to groovy commands at this point.')
+                    embed.add_field(name='pl save plname', value='Save the current playlist as plname.')
+                    embed.add_field(name='pl list [plname]', value='List all songs in [plname] or all available playlists if invalid.')
+                    embed.add_field(name='pl [groovy|rythm|rythm2] plname', value='Queue plname using the specified music bot.')
+                    embed.add_field(name='pl rename old new', value='Rename playlist old to new.')
+                    embed.add_field(name='pl drop plname', value='Delete playlist plname.')
+                    embed.add_field(name='pl trim plname [space seperated indices]', value='Remove songs at specified indices from plname.')
+                    await ctx.channel.send(embed=embed)
+
                 # start listening
                 if m.lower().startswith('startl'):
                     await ctx.add_reaction('😌️')
@@ -97,9 +109,9 @@ class myClient(discord.Client):
                     await ctx.channel.send(f'Saving this queue as playlist `{m}`')
                     dbconn = psycopg2.connect("dbname=DPL")
                     cursor = dbconn.cursor()
-                    cursor.execute(f"SELECT * FROM playlists WHERE Name='{m}'")
+                    cursor.execute(f"SELECT * FROM playlists WHERE name='{m}'")
                     if not cursor.fetchall():
-                        cursor.execute(f"INSERT INTO playlists (Name) VALUES ('{m}')")
+                        cursor.execute(f"INSERT INTO playlists (name) VALUES ('{m}')")
                         cursor.execute(f"CREATE TABLE {m} (id serial primary key, title text not NULL, url text, uid text)")
                     async for msg in ctx.channel.history(after=after):
                         if msg.embeds and msg.embeds[0].description:
@@ -122,10 +134,12 @@ class myClient(discord.Client):
                 elif m.lower().startswith('list'):
                     dbconn = psycopg2.connect("dbname=DPL")
                     cursor = dbconn.cursor()
-                    if len(m) <= 5:
+                    if len(m) > 5:
+                        cursor.execute(f"SELECT * FROM playlists WHERE name={m[6:]}")
+                    if len(m) <= 5 or not cursor.fetchall():
                         m = "Playlists"
                         l = '```nim\n'
-                        cursor.execute("SELECT Name from playlists")
+                        cursor.execute("SELECT name FROM playlists")
                         page = 0
                         embeds = []
                         for name in cursor.fetchall():
@@ -142,7 +156,7 @@ class myClient(discord.Client):
                         m = m[5:]
                         dbconn = psycopg2.connect("dbname=DPL")
                         cursor = dbconn.cursor()
-                        cursor.execute(f"SELECT title, url, uid from {m}")
+                        cursor.execute(f"SELECT title, url, uid FROM {m}")
                         embeds = []
                         page = 0
                         l = ''
@@ -217,7 +231,7 @@ class myClient(discord.Client):
                     m= m[0]
                     dbconn = psycopg2.connect("dbname=DPL")
                     cursor = dbconn.cursor()
-                    cursor.execute(f"SELECT id, title, url, uid from {m}")
+                    cursor.execute(f"SELECT id, title, url, uid FROM {m}")
                     embeds = []
                     page = 0
                     l = ''

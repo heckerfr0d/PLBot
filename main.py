@@ -88,13 +88,13 @@ class myClient(discord.Client):
                 # help
                 if m.lower().startswith('help'):
                     embed = discord.Embed(title='PLBot', color=ctx.author.color, description='A bot to manage groovy playlists!\nPrefix for this bot is `pl `.')
-                    embed.add_field(name='```nim pl startl```', value='Start listening to groovy commands at this point.')
-                    embed.add_field(name='```nim pl save plname```', value='Save the current playlist as plname.')
-                    embed.add_field(name='```nim pl list [plname]```', value='List all songs in [plname] or all available playlists if invalid.')
-                    embed.add_field(name='```nim pl [groovy|rythm|rythm2] plname```', value='Queue plname using the specified music bot.')
-                    embed.add_field(name='```nim pl rename old new```', value='Rename playlist old to new.')
-                    embed.add_field(name='```nim pl drop plname```', value='Delete playlist plname.')
-                    embed.add_field(name='```nim pl trim plname [space seperated indices]```', value='Remove songs at specified indices from plname.')
+                    embed.add_field(name='```nim\npl startl```', value='Start listening to groovy commands at this point.')
+                    embed.add_field(name='```nim\npl save plname```', value='Save the current playlist as plname.')
+                    embed.add_field(name='```nim\npl list [plname]```', value='List all songs in [plname] or all available playlists if invalid.')
+                    embed.add_field(name='```nim\npl [groovy|rythm|rythm2] plname```', value='Queue plname using the specified music bot.')
+                    embed.add_field(name='```nim\npl rename old new```', value='Rename playlist old to new.')
+                    embed.add_field(name='```nim\npl drop plname```', value='Delete playlist plname.')
+                    embed.add_field(name='```nim\npl trim plname [space seperated indices]```', value='Remove songs at specified indices from plname.')
                     await ctx.channel.send(embed=embed)
 
                 # start listening

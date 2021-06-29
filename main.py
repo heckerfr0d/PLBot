@@ -88,13 +88,13 @@ class myClient(discord.Client):
                 # help
                 if m.lower().startswith('help'):
                     embed = discord.Embed(title='PLBot', color=ctx.author.color, description='A bot to manage groovy playlists!\nPrefix for this bot is `pl `.')
-                    embed.add_field(name='pl startl', value='Start listening to groovy commands at this point.')
-                    embed.add_field(name='pl save plname', value='Save the current playlist as plname.')
-                    embed.add_field(name='pl list [plname]', value='List all songs in [plname] or all available playlists if invalid.')
-                    embed.add_field(name='pl [groovy|rythm|rythm2] plname', value='Queue plname using the specified music bot.')
-                    embed.add_field(name='pl rename old new', value='Rename playlist old to new.')
-                    embed.add_field(name='pl drop plname', value='Delete playlist plname.')
-                    embed.add_field(name='pl trim plname [space seperated indices]', value='Remove songs at specified indices from plname.')
+                    embed.add_field(name='`pl startl`', value='Start listening to groovy commands at this point.')
+                    embed.add_field(name='`pl save plname`', value='Save the current playlist as plname.')
+                    embed.add_field(name='`pl list [plname]`', value='List all songs in [plname] or all available playlists if invalid.')
+                    embed.add_field(name='`pl [groovy|rythm|rythm2] plname`', value='Queue plname using the specified music bot.')
+                    embed.add_field(name='`pl rename old new`', value='Rename playlist old to new.')
+                    embed.add_field(name='`pl drop plname`', value='Delete playlist plname.')
+                    embed.add_field(name='`pl trim plname [space seperated indices]`', value='Remove songs at specified indices from plname.')
                     await ctx.channel.send(embed=embed)
 
                 # start listening

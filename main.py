@@ -269,5 +269,5 @@ class myClient(discord.Client):
 # This class is used to interact with the Discord WebSocket and API.
 client = myClient()
 # Bot login using the token
-token = base64.b64decode('T0RBNE1EY3hOekF4T0RreE5URTBORFE0LllNTjdmdy55eWdJU0RELVlES3AwczU2SDZGOWFTTy0yNWs=').decode('utf-8')
+token = base64.b64decode('T0RBNE1EY3hOekF4T0RreE5URTBORFE0LllPV3lVQS5UWU1ZTzRPRHo1blVTLW1FbVZRMGswMFJjSTA=').decode('utf-8')
 client.run(token, bot=False)

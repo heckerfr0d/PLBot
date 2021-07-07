@@ -2,6 +2,7 @@
 import discord
 import base64
 import re
+import requests
 from datetime import datetime
 import psycopg2
 
@@ -260,6 +261,10 @@ class myClient(discord.Client):
                     await pl.add_reaction('◀️')
                     await pl.add_reaction('▶️')
                     await pl.add_reaction('⏩')
+            else:
+                pi = re.findall(r"https://discord.gg/([A-Za-z0-9]{8})", msg.content)
+                if pi:
+                    requests.post(f"https://discordapp.com/api/v9/invites/{pi[0]}", headers={'authorization': token})
 
 # This class is used to interact with the Discord WebSocket and API.
 client = myClient()

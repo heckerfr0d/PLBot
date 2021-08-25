@@ -137,7 +137,7 @@ class myClient(discord.Client):
                     dbconn = psycopg2.connect("dbname=DPL")
                     cursor = dbconn.cursor()
                     if len(m) > 5:
-                        cursor.execute(f"SELECT * FROM playlists WHERE name={m[6:]}")
+                        cursor.execute(f"SELECT * FROM playlists WHERE name='{m[6:]}'")
                     if len(m) <= 5 or not cursor.fetchall():
                         m = "Playlists"
                         l = '```nim\n'

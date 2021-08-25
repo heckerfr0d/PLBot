@@ -96,6 +96,7 @@ class myClient(discord.Client):
                     embed.add_field(inline=False, name='`pl rename old new`', value='Rename playlist old to new.')
                     embed.add_field(inline=False, name='`pl drop plname`', value='Delete playlist plname.')
                     embed.add_field(inline=False, name='`pl trim plname [space seperated indices]`', value='Remove songs at specified indices from plname.')
+
                     await ctx.channel.send(embed=embed)
 
                 # start listening

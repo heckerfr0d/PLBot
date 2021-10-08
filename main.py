@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import discord
-import base64
+import os
 import re
 import requests
 from datetime import datetime
@@ -270,5 +270,5 @@ class myClient(discord.Client):
 # This class is used to interact with the Discord WebSocket and API.
 client = myClient()
 # Bot login using the token
-token = base64.b64decode('T0RBNE1EY3hOekF4T0RreE5URTBORFE0LllPV3lVQS5UWU1ZTzRPRHo1blVTLW1FbVZRMGswMFJjSTA=').decode('utf-8')
+token = os.getenv('PLBOT')
 client.run(token, bot=False)
